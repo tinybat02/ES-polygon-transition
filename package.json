@@ -1,0 +1,24 @@
+{
+  "name": "es-polygon-transition-routing",
+  "version": "1.0.0",
+  "description": "ES polygon & transitions",
+  "scripts": {
+    "build": "grafana-toolkit plugin:build",
+    "test": "grafana-toolkit plugin:test",
+    "dev": "grafana-toolkit plugin:dev",
+    "watch": "grafana-toolkit plugin:dev --watch"
+  },
+  "author": "Nam Le",
+  "license": "MIT",
+  "devDependencies": {
+    "@grafana/data": "next",
+    "@grafana/toolkit": "next",
+    "@grafana/ui": "next"
+  },
+  "dependencies": {
+    "@types/ol": "^6.3.1",
+    "nanoid": "^3.1.10",
+    "ol": "^6.3.1",
+    "react-dropzone": "^11.0.1"
+  }
+}
