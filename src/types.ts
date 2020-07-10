@@ -1,17 +1,19 @@
 import { DataFrame, Field, Vector } from '@grafana/data';
 
 export interface GeoJSON {
-  features: Array<{
+  features: Array<FeatureGeojson>;
+}
+
+export interface FeatureGeojson {
+  type: string;
+  properties: {
+    [key: string]: string;
+    name: string;
+  };
+  geometry: {
     type: string;
-    properties: {
-      [key: string]: string;
-      name: string;
-    };
-    geometry: {
-      type: string;
-      coordinates: number[][][];
-    };
-  }>;
+    coordinates: number[][][];
+  };
 }
 
 export interface PanelOptions {
@@ -20,6 +22,7 @@ export interface PanelOptions {
   tile_url: string;
   zoom_level: number;
   geojson: GeoJSON | null;
+  topology: GeoJSON | null;
 }
 
 export const defaults: PanelOptions = {
@@ -28,6 +31,7 @@ export const defaults: PanelOptions = {
   tile_url: '',
   zoom_level: 18,
   geojson: null,
+  topology: null,
 };
 
 export interface Buffer extends Vector {

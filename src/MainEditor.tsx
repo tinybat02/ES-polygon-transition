@@ -6,11 +6,10 @@ import { PanelOptions } from './types';
 import { useDropzone } from 'react-dropzone';
 import DeleteIcon from './img/DeleteIcon.svg';
 import CheckIcon from './img/CheckIcon.svg';
-import Exists from './img/Exists.svg';
-import None from './img/None.svg';
 
 export const MainEditor: React.FC<PanelEditorProps<PanelOptions>> = ({ options, onOptionsChange }) => {
   const [inputs, setInputs] = useState(options);
+  const [optionFile, setOption] = useState('geojson');
   const [myFiles, setMyFiles] = useState<File[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,7 +52,7 @@ export const MainEditor: React.FC<PanelEditorProps<PanelOptions>> = ({ options, 
     setMyFiles(leftOver);
   };
 
-  const addGeoJSON = (fileName: string) => {
+  const storeFile = (fileName: string) => {
     const reader = new FileReader();
     const chosenFile = myFiles.find(f => f.name === fileName);
 
@@ -61,7 +60,7 @@ export const MainEditor: React.FC<PanelEditorProps<PanelOptions>> = ({ options, 
       const obj = JSON.parse(reader.result as string);
       onOptionsChange({
         ...options,
-        geojson: obj,
+        [optionFile]: obj,
       });
     };
     reader.readAsText(chosenFile as Blob);
@@ -126,16 +125,20 @@ export const MainEditor: React.FC<PanelEditorProps<PanelOptions>> = ({ options, 
           />
         </div>
         <div className="section gf-form-group">
-          <div style={{ display: 'flex', flexDirection: 'row' }}>
-            <h5 className="section-heading" style={{ marginTop: 7 }}>
-              Drop Polygon File
-            </h5>{' '}
-            {options.geojson ? <img src={Exists} /> : <img src={None} />}
+          <div
+            className="section-heading"
+            style={{ display: 'flex', alignItems: 'center', marginTop: 7, marginBottom: 10 }}
+          >
+            <h5 style={{ marginRight: 10 }}>Drop File</h5>{' '}
+            <select value={optionFile} onChange={e => setOption(e.target.value)} style={{ width: 120 }}>
+              <option value="geojson">GeoJSON</option>
+              <option value="topology">Topology</option>
+            </select>
           </div>
           <section>
             <div {...getRootProps({ className: 'dropzone', style: baseStyle })}>
               <input {...getInputProps()} />
-              <p>Drag 'n' drop Polygons File here, or click to select file</p>
+              <p>Drag 'n' drop File here, or click to select file</p>
             </div>
             {myFiles.length > 0 ? (
               <div>
@@ -147,7 +150,7 @@ export const MainEditor: React.FC<PanelEditorProps<PanelOptions>> = ({ options, 
                       <button onClick={() => handleRemoveFile(file.name)}>
                         <img src={DeleteIcon} />
                       </button>
-                      <button onClick={() => addGeoJSON(file.name)}>
+                      <button onClick={() => storeFile(file.name)}>
                         <img src={CheckIcon} />
                       </button>
                     </p>

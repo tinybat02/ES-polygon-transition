@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@types/ol": "^6.3.1",
+    "geojson-path-finder": "^1.5.2",
     "nanoid": "^3.1.10",
     "ol": "^6.3.1",
     "react-dropzone": "^11.0.1"

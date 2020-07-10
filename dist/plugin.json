@@ -1,0 +1,21 @@
+{
+  "type": "panel",
+  "name": "ES Polygon Transition",
+  "id": "id-es-polygon-transition-flow",
+  "dataFormats": ["table"],
+  "info": {
+    "description": "ES Polygon & Transtion",
+    "author": {
+      "name": "Nam Le"
+    },
+    "keywords": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2020-07-10"
+  },
+
+  "dependencies": {
+    "grafanaVersion": "6.3.x",
+    "plugins": []
+  }
+}
