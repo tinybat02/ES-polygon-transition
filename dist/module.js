@@ -59973,7 +59973,7 @@ function (_super) {
                   endPoint = _a.endPoint;
 
               var path = pathFinder_1.findPath(startPoint, endPoint).path;
-              pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, "From: " + _this.startObj[currentStore_1][target] + " -> " + (_this.destObj[currentStore_1][target] ? "- To: " + _this.destObj[currentStore_1][target] : '')));
+              pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, "From: " + _this.startObj[currentStore_1][target] + (_this.destObj[currentStore_1][target] ? "- To: " + _this.destObj[currentStore_1][target] : '')));
             } else {
               console.log('not found store ', target);
             }

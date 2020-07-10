@@ -237,7 +237,7 @@ export class MainPanel extends PureComponent<Props, State> {
               pathFeatureArray.push(
                 createLine(
                   path,
-                  `From: ${this.startObj[currentStore][target]} -> ${
+                  `From: ${this.startObj[currentStore][target]}${
                     this.destObj[currentStore][target] ? `- To: ${this.destObj[currentStore][target]}` : ''
                   }`
                 )
