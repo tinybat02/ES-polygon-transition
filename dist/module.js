@@ -59947,7 +59947,9 @@ function (_super) {
                   endPoint = _a.endPoint;
 
               var path = pathFinder_1.findPath(startPoint, endPoint).path;
-              pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, _this.startObj[currentStore_1][target] + " ->"));
+              pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, "From: " + _this.startObj[currentStore_1][target]));
+            } else {
+              console.log('not found store ', target);
             }
           });
         } else if (!this.startObj[currentStore_1] && this.destObj[currentStore_1]) {
@@ -59958,7 +59960,9 @@ function (_super) {
                   endPoint = _a.endPoint;
 
               var path = pathFinder_1.findPath(startPoint, endPoint).path;
-              pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, _this.destObj[currentStore_1][from] + " <-"));
+              pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, "To: " + _this.destObj[currentStore_1][from]));
+            } else {
+              console.log('not found store ', from);
             }
           });
         } else {
@@ -59969,17 +59973,23 @@ function (_super) {
                   endPoint = _a.endPoint;
 
               var path = pathFinder_1.findPath(startPoint, endPoint).path;
-              pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, _this.startObj[currentStore_1][target] + " -> " + (_this.destObj[currentStore_1][target] ? "; " + _this.destObj[currentStore_1][target] + " <-" : '')));
+              pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, "From: " + _this.startObj[currentStore_1][target] + " -> " + (_this.destObj[currentStore_1][target] ? "- To: " + _this.destObj[currentStore_1][target] : '')));
+            } else {
+              console.log('not found store ', target);
             }
           });
           Object.keys(this.destObj[currentStore_1]).map(function (from) {
-            if (!_this.startObj[currentStore_1][from] && coord_1[from].length > 0) {
-              var _a = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["findOptimalMatch"])(coord_1[currentStore_1], coord_1[from]),
-                  startPoint = _a.startPoint,
-                  endPoint = _a.endPoint;
+            if (!_this.startObj[currentStore_1][from]) {
+              if (coord_1[from].length > 0) {
+                var _a = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["findOptimalMatch"])(coord_1[currentStore_1], coord_1[from]),
+                    startPoint = _a.startPoint,
+                    endPoint = _a.endPoint;
 
-              var path = pathFinder_1.findPath(startPoint, endPoint).path;
-              pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, _this.destObj[currentStore_1][from] + " <-"));
+                var path = pathFinder_1.findPath(startPoint, endPoint).path;
+                pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, "To: " + _this.destObj[currentStore_1][from]));
+              } else {
+                console.log('not found store ', from);
+              }
             }
           });
         }
@@ -60098,8 +60108,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var ol_source_Vector__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ol/source/Vector */ "../node_modules/ol/source/Vector.js");
 /* harmony import */ var ol_Feature__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ol/Feature */ "../node_modules/ol/Feature.js");
 /* harmony import */ var ol_geom_LineString__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ol/geom/LineString */ "../node_modules/ol/geom/LineString.js");
-/* harmony import */ var ol_geom_Polygon__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ol/geom/Polygon */ "../node_modules/ol/geom/Polygon.js");
-/* harmony import */ var ol_style__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ol/style */ "../node_modules/ol/style.js");
+/* harmony import */ var ol_geom_Point__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ol/geom/Point */ "../node_modules/ol/geom/Point.js");
+/* harmony import */ var ol_geom_Polygon__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ol/geom/Polygon */ "../node_modules/ol/geom/Polygon.js");
+/* harmony import */ var ol_style__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ol/style */ "../node_modules/ol/style.js");
+
 
 
 
@@ -60116,13 +60128,13 @@ var percentageToHsl = function percentageToHsl(percentage) {
 var createPolygon = function createPolygon(coordinates, value, label, color) {
   var polygonFeature = new ol_Feature__WEBPACK_IMPORTED_MODULE_3__["default"]({
     type: 'Polygon',
-    geometry: new ol_geom_Polygon__WEBPACK_IMPORTED_MODULE_5__["default"](coordinates).transform('EPSG:4326', 'EPSG:3857')
+    geometry: new ol_geom_Polygon__WEBPACK_IMPORTED_MODULE_6__["default"](coordinates).transform('EPSG:4326', 'EPSG:3857')
   });
   polygonFeature.set('value', value);
   polygonFeature.set('label', label);
   polygonFeature.set('color', color);
-  polygonFeature.setStyle(new ol_style__WEBPACK_IMPORTED_MODULE_6__["Style"]({
-    fill: new ol_style__WEBPACK_IMPORTED_MODULE_6__["Fill"]({
+  polygonFeature.setStyle(new ol_style__WEBPACK_IMPORTED_MODULE_7__["Style"]({
+    fill: new ol_style__WEBPACK_IMPORTED_MODULE_7__["Fill"]({
       color: color
     })
   }));
@@ -60163,21 +60175,24 @@ var createHeatLayer = function createHeatLayer(series, geojson) {
   });
 };
 var createLine = function createLine(path, label) {
+  var destPoint = path.slice(-1)[0];
   var lineFeature = new ol_Feature__WEBPACK_IMPORTED_MODULE_3__["default"](new ol_geom_LineString__WEBPACK_IMPORTED_MODULE_4__["default"](path).transform('EPSG:4326', 'EPSG:3857'));
-  lineFeature.setStyle(new ol_style__WEBPACK_IMPORTED_MODULE_6__["Style"]({
-    stroke: new ol_style__WEBPACK_IMPORTED_MODULE_6__["Stroke"]({
+  lineFeature.setStyle([new ol_style__WEBPACK_IMPORTED_MODULE_7__["Style"]({
+    stroke: new ol_style__WEBPACK_IMPORTED_MODULE_7__["Stroke"]({
       color: '#49A8DE',
       width: 2
-    }),
-    text: new ol_style__WEBPACK_IMPORTED_MODULE_6__["Text"]({
-      stroke: new ol_style__WEBPACK_IMPORTED_MODULE_6__["Stroke"]({
+    })
+  }), new ol_style__WEBPACK_IMPORTED_MODULE_7__["Style"]({
+    geometry: new ol_geom_Point__WEBPACK_IMPORTED_MODULE_5__["default"](destPoint).transform('EPSG:4326', 'EPSG:3857'),
+    text: new ol_style__WEBPACK_IMPORTED_MODULE_7__["Text"]({
+      stroke: new ol_style__WEBPACK_IMPORTED_MODULE_7__["Stroke"]({
         color: '#fff',
         width: 4
       }),
       font: '16px Calibri,sans-serif',
       text: label
     })
-  }));
+  })]);
   return lineFeature;
 };
 var createLayer = function createLayer(features) {

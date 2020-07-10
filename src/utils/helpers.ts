@@ -2,6 +2,7 @@ import { Vector as VectorLayer } from 'ol/layer';
 import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';
 import LineString from 'ol/geom/LineString';
+import Point from 'ol/geom/Point';
 import Polygon from 'ol/geom/Polygon';
 import { Coordinate } from 'ol/coordinate';
 import { Style, Fill, Stroke, Text } from 'ol/style';
@@ -74,14 +75,18 @@ export const createHeatLayer = (series: Frame[], geojson: GeoJSON) => {
 };
 
 export const createLine = (path: Coordinate[], label: string) => {
+  const destPoint = path.slice(-1)[0];
   const lineFeature = new Feature(new LineString(path).transform('EPSG:4326', 'EPSG:3857'));
 
-  lineFeature.setStyle(
+  lineFeature.setStyle([
     new Style({
       stroke: new Stroke({
         color: '#49A8DE',
         width: 2,
       }),
+    }),
+    new Style({
+      geometry: new Point(destPoint).transform('EPSG:4326', 'EPSG:3857'),
       text: new Text({
         stroke: new Stroke({
           color: '#fff',
@@ -90,8 +95,8 @@ export const createLine = (path: Coordinate[], label: string) => {
         font: '16px Calibri,sans-serif',
         text: label,
       }),
-    })
-  );
+    }),
+  ]);
   return lineFeature;
 };
 
