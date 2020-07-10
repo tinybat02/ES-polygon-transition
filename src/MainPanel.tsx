@@ -185,8 +185,8 @@ export class MainPanel extends PureComponent<Props, State> {
       prevState.currentPolygon !== this.state.currentPolygon
     ) {
       this.map.removeLayer(this.transitionLayer);
-      // console.log('from ', this.startObj[this.state.currentPolygon]);
-      // console.log('to ', this.destObj[this.state.currentPolygon]);
+      console.log('from ', this.startObj[this.state.currentPolygon]);
+      console.log('to ', this.destObj[this.state.currentPolygon]);
       const currentStore = this.state.currentPolygon;
 
       const all_stores = [
@@ -206,47 +206,55 @@ export class MainPanel extends PureComponent<Props, State> {
           : null;
       });
 
-      const pathFinder = new PathFinder(this.props.options.topology);
-      const pathFeatureArray: Feature[] = [];
-      if (this.startObj[currentStore] && !this.destObj[currentStore]) {
-        Object.keys(this.startObj[currentStore]).map(target => {
-          const { startPoint, endPoint } = findOptimalMatch(coord[currentStore], coord[target]);
-          const path = pathFinder.findPath(startPoint, endPoint).path;
-          pathFeatureArray.push(createLine(path, `${this.startObj[currentStore][target]} ->`));
-        });
-      } else if (!this.startObj[currentStore] && this.destObj[currentStore]) {
-        Object.keys(this.destObj[currentStore]).map(from => {
-          const { startPoint, endPoint } = findOptimalMatch(coord[currentStore], coord[from]);
-          const path = pathFinder.findPath(startPoint, endPoint).path;
-          pathFeatureArray.push(createLine(path, `${this.destObj[currentStore][from]} <-`));
-        });
+      if (coord[currentStore].length > 0) {
+        const pathFinder = new PathFinder(this.props.options.topology);
+        const pathFeatureArray: Feature[] = [];
+        if (this.startObj[currentStore] && !this.destObj[currentStore]) {
+          Object.keys(this.startObj[currentStore]).map(target => {
+            if (coord[target].length > 0) {
+              const { startPoint, endPoint } = findOptimalMatch(coord[currentStore], coord[target]);
+              const path = pathFinder.findPath(startPoint, endPoint).path;
+              pathFeatureArray.push(createLine(path, `${this.startObj[currentStore][target]} ->`));
+            }
+          });
+        } else if (!this.startObj[currentStore] && this.destObj[currentStore]) {
+          Object.keys(this.destObj[currentStore]).map(from => {
+            if (coord[from].length > 0) {
+              const { startPoint, endPoint } = findOptimalMatch(coord[currentStore], coord[from]);
+              const path = pathFinder.findPath(startPoint, endPoint).path;
+              pathFeatureArray.push(createLine(path, `${this.destObj[currentStore][from]} <-`));
+            }
+          });
+        } else {
+          Object.keys(this.startObj[currentStore]).map(target => {
+            if (coord[target].length > 0) {
+              const { startPoint, endPoint } = findOptimalMatch(coord[currentStore], coord[target]);
+              const path = pathFinder.findPath(startPoint, endPoint).path;
+              pathFeatureArray.push(
+                createLine(
+                  path,
+                  `${this.startObj[currentStore][target]} -> ${
+                    this.destObj[currentStore][target] ? `; ${this.destObj[currentStore][target]} <-` : ''
+                  }`
+                )
+              );
+            }
+          });
+
+          Object.keys(this.destObj[currentStore]).map(from => {
+            if (!this.startObj[currentStore][from] && coord[from].length > 0) {
+              const { startPoint, endPoint } = findOptimalMatch(coord[currentStore], coord[from]);
+              const path = pathFinder.findPath(startPoint, endPoint).path;
+              pathFeatureArray.push(createLine(path, `${this.destObj[currentStore][from]} <-`));
+            }
+          });
+        }
+
+        this.transitionLayer = createLayer(pathFeatureArray);
+        this.map.addLayer(this.transitionLayer);
       } else {
-        Object.keys(this.startObj[currentStore]).map(target => {
-          if (coord[target].length > 0) {
-            const { startPoint, endPoint } = findOptimalMatch(coord[currentStore], coord[target]);
-            const path = pathFinder.findPath(startPoint, endPoint).path;
-            pathFeatureArray.push(
-              createLine(
-                path,
-                `${this.startObj[currentStore][target]} -> ${
-                  this.destObj[currentStore][target] ? `; ${this.destObj[currentStore][target]} <-` : ''
-                }`
-              )
-            );
-          }
-        });
-
-        Object.keys(this.destObj[currentStore]).map(from => {
-          if (!this.startObj[currentStore][from] && coord[from].length > 0) {
-            const { startPoint, endPoint } = findOptimalMatch(coord[currentStore], coord[from]);
-            const path = pathFinder.findPath(startPoint, endPoint).path;
-            pathFeatureArray.push(createLine(path, `${this.destObj[currentStore][from]} <-`));
-          }
-        });
+        console.log('not found coord of current hover', currentStore);
       }
-
-      this.transitionLayer = createLayer(pathFeatureArray);
-      this.map.addLayer(this.transitionLayer);
     }
   }
 

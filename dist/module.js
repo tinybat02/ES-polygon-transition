@@ -59921,9 +59921,9 @@ function (_super) {
     }
 
     if (this.props.options.topology && this.state.currentPolygon && prevState.currentPolygon !== this.state.currentPolygon) {
-      this.map.removeLayer(this.transitionLayer); // console.log('from ', this.startObj[this.state.currentPolygon]);
-      // console.log('to ', this.destObj[this.state.currentPolygon]);
-
+      this.map.removeLayer(this.transitionLayer);
+      console.log('from ', this.startObj[this.state.currentPolygon]);
+      console.log('to ', this.destObj[this.state.currentPolygon]);
       var currentStore_1 = this.state.currentPolygon;
 
       var all_stores = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"])(new Set(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"])([currentStore_1], this.startObj[currentStore_1] ? Object.keys(this.startObj[currentStore_1]) : [], this.destObj[currentStore_1] ? Object.keys(this.destObj[currentStore_1]) : [])));
@@ -59934,52 +59934,61 @@ function (_super) {
           return feature.properties && feature.properties.name == store;
         }) : null;
       });
-      var pathFinder_1 = new geojson_path_finder__WEBPACK_IMPORTED_MODULE_11___default.a(this.props.options.topology);
-      var pathFeatureArray_1 = [];
 
-      if (this.startObj[currentStore_1] && !this.destObj[currentStore_1]) {
-        Object.keys(this.startObj[currentStore_1]).map(function (target) {
-          var _a = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["findOptimalMatch"])(coord_1[currentStore_1], coord_1[target]),
-              startPoint = _a.startPoint,
-              endPoint = _a.endPoint;
+      if (coord_1[currentStore_1].length > 0) {
+        var pathFinder_1 = new geojson_path_finder__WEBPACK_IMPORTED_MODULE_11___default.a(this.props.options.topology);
+        var pathFeatureArray_1 = [];
 
-          var path = pathFinder_1.findPath(startPoint, endPoint).path;
-          pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, _this.startObj[currentStore_1][target] + " ->"));
-        });
-      } else if (!this.startObj[currentStore_1] && this.destObj[currentStore_1]) {
-        Object.keys(this.destObj[currentStore_1]).map(function (from) {
-          var _a = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["findOptimalMatch"])(coord_1[currentStore_1], coord_1[from]),
-              startPoint = _a.startPoint,
-              endPoint = _a.endPoint;
+        if (this.startObj[currentStore_1] && !this.destObj[currentStore_1]) {
+          Object.keys(this.startObj[currentStore_1]).map(function (target) {
+            if (coord_1[target].length > 0) {
+              var _a = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["findOptimalMatch"])(coord_1[currentStore_1], coord_1[target]),
+                  startPoint = _a.startPoint,
+                  endPoint = _a.endPoint;
 
-          var path = pathFinder_1.findPath(startPoint, endPoint).path;
-          pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, _this.destObj[currentStore_1][from] + " <-"));
-        });
+              var path = pathFinder_1.findPath(startPoint, endPoint).path;
+              pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, _this.startObj[currentStore_1][target] + " ->"));
+            }
+          });
+        } else if (!this.startObj[currentStore_1] && this.destObj[currentStore_1]) {
+          Object.keys(this.destObj[currentStore_1]).map(function (from) {
+            if (coord_1[from].length > 0) {
+              var _a = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["findOptimalMatch"])(coord_1[currentStore_1], coord_1[from]),
+                  startPoint = _a.startPoint,
+                  endPoint = _a.endPoint;
+
+              var path = pathFinder_1.findPath(startPoint, endPoint).path;
+              pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, _this.destObj[currentStore_1][from] + " <-"));
+            }
+          });
+        } else {
+          Object.keys(this.startObj[currentStore_1]).map(function (target) {
+            if (coord_1[target].length > 0) {
+              var _a = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["findOptimalMatch"])(coord_1[currentStore_1], coord_1[target]),
+                  startPoint = _a.startPoint,
+                  endPoint = _a.endPoint;
+
+              var path = pathFinder_1.findPath(startPoint, endPoint).path;
+              pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, _this.startObj[currentStore_1][target] + " -> " + (_this.destObj[currentStore_1][target] ? "; " + _this.destObj[currentStore_1][target] + " <-" : '')));
+            }
+          });
+          Object.keys(this.destObj[currentStore_1]).map(function (from) {
+            if (!_this.startObj[currentStore_1][from] && coord_1[from].length > 0) {
+              var _a = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["findOptimalMatch"])(coord_1[currentStore_1], coord_1[from]),
+                  startPoint = _a.startPoint,
+                  endPoint = _a.endPoint;
+
+              var path = pathFinder_1.findPath(startPoint, endPoint).path;
+              pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, _this.destObj[currentStore_1][from] + " <-"));
+            }
+          });
+        }
+
+        this.transitionLayer = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLayer"])(pathFeatureArray_1);
+        this.map.addLayer(this.transitionLayer);
       } else {
-        Object.keys(this.startObj[currentStore_1]).map(function (target) {
-          if (coord_1[target].length > 0) {
-            var _a = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["findOptimalMatch"])(coord_1[currentStore_1], coord_1[target]),
-                startPoint = _a.startPoint,
-                endPoint = _a.endPoint;
-
-            var path = pathFinder_1.findPath(startPoint, endPoint).path;
-            pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, _this.startObj[currentStore_1][target] + " -> " + (_this.destObj[currentStore_1][target] ? "; " + _this.destObj[currentStore_1][target] + " <-" : '')));
-          }
-        });
-        Object.keys(this.destObj[currentStore_1]).map(function (from) {
-          if (!_this.startObj[currentStore_1][from] && coord_1[from].length > 0) {
-            var _a = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["findOptimalMatch"])(coord_1[currentStore_1], coord_1[from]),
-                startPoint = _a.startPoint,
-                endPoint = _a.endPoint;
-
-            var path = pathFinder_1.findPath(startPoint, endPoint).path;
-            pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, _this.destObj[currentStore_1][from] + " <-"));
-          }
-        });
+        console.log('not found coord of current hover', currentStore_1);
       }
-
-      this.transitionLayer = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLayer"])(pathFeatureArray_1);
-      this.map.addLayer(this.transitionLayer);
     }
   };
 
