@@ -224,7 +224,8 @@ export class MainPanel extends PureComponent<Props, State> {
         Object.keys(this.startObj[currentStore]).map(target => {
           console.log('array of start and end', coord[currentStore], coord[target]);
           const { startPoint, endPoint } = findOptimalMatch(coord[currentStore], coord[target]);
-          console.log('found the match ', startPoint, endPoint);
+          // console.log('found the match ', startPoint, endPoint);
+          console.log('target ', target);
           const path = pathFinder.findPath(startPoint, endPoint).path;
           pathFeatureArray.push(
             createLine(

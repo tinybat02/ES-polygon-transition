@@ -59961,9 +59961,10 @@ function (_super) {
 
           var _a = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["findOptimalMatch"])(coord_1[currentStore_1], coord_1[target]),
               startPoint = _a.startPoint,
-              endPoint = _a.endPoint;
+              endPoint = _a.endPoint; // console.log('found the match ', startPoint, endPoint);
 
-          console.log('found the match ', startPoint, endPoint);
+
+          console.log('target ', target);
           var path = pathFinder_1.findPath(startPoint, endPoint).path;
           pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, _this.startObj[currentStore_1][target] + " -> " + (_this.destObj[currentStore_1][target] ? "; " + _this.destObj[currentStore_1][target] + " <-" : '')));
         });
