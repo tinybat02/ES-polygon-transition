@@ -185,6 +185,7 @@ export class MainPanel extends PureComponent<Props, State> {
       prevState.currentPolygon !== this.state.currentPolygon
     ) {
       this.map.removeLayer(this.transitionLayer);
+      console.log('current hover ', this.state.currentPolygon);
       console.log('from ', this.startObj[this.state.currentPolygon]);
       console.log('to ', this.destObj[this.state.currentPolygon]);
       const currentStore = this.state.currentPolygon;
@@ -214,7 +215,7 @@ export class MainPanel extends PureComponent<Props, State> {
             if (coord[target].length > 0) {
               const { startPoint, endPoint } = findOptimalMatch(coord[currentStore], coord[target]);
               const path = pathFinder.findPath(startPoint, endPoint).path;
-              pathFeatureArray.push(createLine(path, `From: ${this.startObj[currentStore][target]}`));
+              pathFeatureArray.push(createLine(path, `To ${this.startObj[currentStore][target]}`));
             } else {
               console.log('not found store ', target);
             }
@@ -224,7 +225,7 @@ export class MainPanel extends PureComponent<Props, State> {
             if (coord[from].length > 0) {
               const { startPoint, endPoint } = findOptimalMatch(coord[currentStore], coord[from]);
               const path = pathFinder.findPath(startPoint, endPoint).path;
-              pathFeatureArray.push(createLine(path, `To: ${this.destObj[currentStore][from]}`));
+              pathFeatureArray.push(createLine(path, `From ${this.destObj[currentStore][from]}`));
             } else {
               console.log('not found store ', from);
             }
@@ -237,8 +238,8 @@ export class MainPanel extends PureComponent<Props, State> {
               pathFeatureArray.push(
                 createLine(
                   path,
-                  `From: ${this.startObj[currentStore][target]}${
-                    this.destObj[currentStore][target] ? `- To: ${this.destObj[currentStore][target]}` : ''
+                  `To ${this.startObj[currentStore][target]}${
+                    this.destObj[currentStore][target] ? `- From ${this.destObj[currentStore][target]}` : ''
                   }`
                 )
               );
@@ -252,7 +253,7 @@ export class MainPanel extends PureComponent<Props, State> {
               if (coord[from].length > 0) {
                 const { startPoint, endPoint } = findOptimalMatch(coord[currentStore], coord[from]);
                 const path = pathFinder.findPath(startPoint, endPoint).path;
-                pathFeatureArray.push(createLine(path, `To: ${this.destObj[currentStore][from]}`));
+                pathFeatureArray.push(createLine(path, `From ${this.destObj[currentStore][from]}`));
               } else {
                 console.log('not found store ', from);
               }

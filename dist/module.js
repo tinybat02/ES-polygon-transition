@@ -59922,6 +59922,7 @@ function (_super) {
 
     if (this.props.options.topology && this.state.currentPolygon && prevState.currentPolygon !== this.state.currentPolygon) {
       this.map.removeLayer(this.transitionLayer);
+      console.log('current hover ', this.state.currentPolygon);
       console.log('from ', this.startObj[this.state.currentPolygon]);
       console.log('to ', this.destObj[this.state.currentPolygon]);
       var currentStore_1 = this.state.currentPolygon;
@@ -59947,7 +59948,7 @@ function (_super) {
                   endPoint = _a.endPoint;
 
               var path = pathFinder_1.findPath(startPoint, endPoint).path;
-              pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, "From: " + _this.startObj[currentStore_1][target]));
+              pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, "To " + _this.startObj[currentStore_1][target]));
             } else {
               console.log('not found store ', target);
             }
@@ -59960,7 +59961,7 @@ function (_super) {
                   endPoint = _a.endPoint;
 
               var path = pathFinder_1.findPath(startPoint, endPoint).path;
-              pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, "To: " + _this.destObj[currentStore_1][from]));
+              pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, "From " + _this.destObj[currentStore_1][from]));
             } else {
               console.log('not found store ', from);
             }
@@ -59973,7 +59974,7 @@ function (_super) {
                   endPoint = _a.endPoint;
 
               var path = pathFinder_1.findPath(startPoint, endPoint).path;
-              pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, "From: " + _this.startObj[currentStore_1][target] + (_this.destObj[currentStore_1][target] ? "- To: " + _this.destObj[currentStore_1][target] : '')));
+              pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, "To " + _this.startObj[currentStore_1][target] + (_this.destObj[currentStore_1][target] ? "- From " + _this.destObj[currentStore_1][target] : '')));
             } else {
               console.log('not found store ', target);
             }
@@ -59986,7 +59987,7 @@ function (_super) {
                     endPoint = _a.endPoint;
 
                 var path = pathFinder_1.findPath(startPoint, endPoint).path;
-                pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, "To: " + _this.destObj[currentStore_1][from]));
+                pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, "From " + _this.destObj[currentStore_1][from]));
               } else {
                 console.log('not found store ', from);
               }
