@@ -59878,14 +59878,34 @@ function (_super) {
   };
 
   MainPanel.prototype.componentDidUpdate = function (prevProps, prevState) {
-    // if (prevProps.data.series !== this.props.data.series) {
-    //   if (this.props.options.geojson) {
-    //     this.map.removeLayer(this.heatLayer);
-    //     this.heatLayer = createHeatLayer(this.props.data.series as Frame[], this.props.options.geojson);
-    //     this.map.addLayer(this.heatLayer);
-    //   }
-    // }
     var _this = this;
+
+    if (prevProps.data.series !== this.props.data.series) {
+      if (this.props.options.geojson) {
+        this.map.removeLayer(this.heatLayer);
+        this.map.removeLayer(this.transitionLayer);
+        var heatData_2 = [];
+        var transitionData_2 = [];
+        this.props.data.series.map(function (serie) {
+          if (serie.name !== 'docs') {
+            heatData_2.push(serie);
+          } else {
+            transitionData_2.push(serie);
+          }
+        });
+        this.heatLayer = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createHeatLayer"])(heatData_2, this.props.options.geojson);
+        this.map.addLayer(this.heatLayer);
+
+        if (transitionData_2.length > 0 && transitionData_2[0].fields[0].values.buffer.length > 0) {
+          var _a = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["processTransitionData"])(transitionData_2[0].fields[0].values.buffer),
+              startObj = _a.startObj,
+              destObj = _a.destObj;
+
+          this.startObj = startObj;
+          this.destObj = destObj;
+        }
+      }
+    }
 
     if (prevProps.options.tile_url !== this.props.options.tile_url) {
       if (this.randomTile) {
