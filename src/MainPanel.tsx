@@ -185,8 +185,8 @@ export class MainPanel extends PureComponent<Props, State> {
       prevState.currentPolygon !== this.state.currentPolygon
     ) {
       this.map.removeLayer(this.transitionLayer);
-      console.log('from ', this.startObj[this.state.currentPolygon]);
-      console.log('to ', this.destObj[this.state.currentPolygon]);
+      // console.log('from ', this.startObj[this.state.currentPolygon]);
+      // console.log('to ', this.destObj[this.state.currentPolygon]);
       const currentStore = this.state.currentPolygon;
 
       const all_stores = [
@@ -222,23 +222,22 @@ export class MainPanel extends PureComponent<Props, State> {
         });
       } else {
         Object.keys(this.startObj[currentStore]).map(target => {
-          console.log('array of start and end', coord[currentStore], coord[target]);
-          const { startPoint, endPoint } = findOptimalMatch(coord[currentStore], coord[target]);
-          // console.log('found the match ', startPoint, endPoint);
-          console.log('target ', target);
-          const path = pathFinder.findPath(startPoint, endPoint).path;
-          pathFeatureArray.push(
-            createLine(
-              path,
-              `${this.startObj[currentStore][target]} -> ${
-                this.destObj[currentStore][target] ? `; ${this.destObj[currentStore][target]} <-` : ''
-              }`
-            )
-          );
+          if (coord[target].length > 0) {
+            const { startPoint, endPoint } = findOptimalMatch(coord[currentStore], coord[target]);
+            const path = pathFinder.findPath(startPoint, endPoint).path;
+            pathFeatureArray.push(
+              createLine(
+                path,
+                `${this.startObj[currentStore][target]} -> ${
+                  this.destObj[currentStore][target] ? `; ${this.destObj[currentStore][target]} <-` : ''
+                }`
+              )
+            );
+          }
         });
 
         Object.keys(this.destObj[currentStore]).map(from => {
-          if (!this.startObj[currentStore][from]) {
+          if (!this.startObj[currentStore][from] && coord[from].length > 0) {
             const { startPoint, endPoint } = findOptimalMatch(coord[currentStore], coord[from]);
             const path = pathFinder.findPath(startPoint, endPoint).path;
             pathFeatureArray.push(createLine(path, `${this.destObj[currentStore][from]} <-`));

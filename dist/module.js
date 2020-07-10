@@ -59921,9 +59921,9 @@ function (_super) {
     }
 
     if (this.props.options.topology && this.state.currentPolygon && prevState.currentPolygon !== this.state.currentPolygon) {
-      this.map.removeLayer(this.transitionLayer);
-      console.log('from ', this.startObj[this.state.currentPolygon]);
-      console.log('to ', this.destObj[this.state.currentPolygon]);
+      this.map.removeLayer(this.transitionLayer); // console.log('from ', this.startObj[this.state.currentPolygon]);
+      // console.log('to ', this.destObj[this.state.currentPolygon]);
+
       var currentStore_1 = this.state.currentPolygon;
 
       var all_stores = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"])(new Set(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"])([currentStore_1], this.startObj[currentStore_1] ? Object.keys(this.startObj[currentStore_1]) : [], this.destObj[currentStore_1] ? Object.keys(this.destObj[currentStore_1]) : [])));
@@ -59957,19 +59957,17 @@ function (_super) {
         });
       } else {
         Object.keys(this.startObj[currentStore_1]).map(function (target) {
-          console.log('array of start and end', coord_1[currentStore_1], coord_1[target]);
+          if (coord_1[target].length > 0) {
+            var _a = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["findOptimalMatch"])(coord_1[currentStore_1], coord_1[target]),
+                startPoint = _a.startPoint,
+                endPoint = _a.endPoint;
 
-          var _a = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["findOptimalMatch"])(coord_1[currentStore_1], coord_1[target]),
-              startPoint = _a.startPoint,
-              endPoint = _a.endPoint; // console.log('found the match ', startPoint, endPoint);
-
-
-          console.log('target ', target);
-          var path = pathFinder_1.findPath(startPoint, endPoint).path;
-          pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, _this.startObj[currentStore_1][target] + " -> " + (_this.destObj[currentStore_1][target] ? "; " + _this.destObj[currentStore_1][target] + " <-" : '')));
+            var path = pathFinder_1.findPath(startPoint, endPoint).path;
+            pathFeatureArray_1.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLine"])(path, _this.startObj[currentStore_1][target] + " -> " + (_this.destObj[currentStore_1][target] ? "; " + _this.destObj[currentStore_1][target] + " <-" : '')));
+          }
         });
         Object.keys(this.destObj[currentStore_1]).map(function (from) {
-          if (!_this.startObj[currentStore_1][from]) {
+          if (!_this.startObj[currentStore_1][from] && coord_1[from].length > 0) {
             var _a = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["findOptimalMatch"])(coord_1[currentStore_1], coord_1[from]),
                 startPoint = _a.startPoint,
                 endPoint = _a.endPoint;
